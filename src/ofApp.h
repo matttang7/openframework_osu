@@ -3,6 +3,10 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "circle.h"
+#include "json/json.h"
+#include "json/include/nlohmann/json.hpp"
+#include <iostream>
+#include <fstream>
 class ofApp : public ofBaseApp {
 
 public:

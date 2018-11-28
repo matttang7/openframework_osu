@@ -63,26 +63,26 @@ void ofApp::draw(){
 	}
 	float timerBar = ofMap(life - timer, 0.0, 10000, 0.0, 1.0, true);
 	ofSetColor(255);
-	ofRect(ofGetWidth() / 2 - 100, ofGetHeight() - 750, barWidth * timerBar, 30);
+	ofDrawRectangle(ofGetWidth() / 2 - 100, ofGetHeight() - 750, barWidth * timerBar, 30);
 	if (timer >= 0) {
 		getTimeButton.set(300, 600);
 		ofSetColor(255, 0, 0);
-		ofCircle(getTimeButton, radius);
+		ofDrawCircle(getTimeButton, radius);
 		ofSetColor(255, 255, 255);
 	}
 	//if (bCircleButton)
 	//	ofSetColor(ofColor::sandyBrown);
 	//else
 	//	ofSetColor(ofColor::white);
-	//ofCircle(circleButton, radius);
+	//ofDrawCircle(circleButton, radius);
 	for (int i = 0; i < allCircles.size(); i++) {
 		if (timer >= allCircles[i].milisecondTime - 1000 && timer <= allCircles[i].milisecondTime + 300) {
 			ofSetColor(0, 0, 0);
-			ofCircle(allCircles[i].location, allCircles[i].radius);
+			ofDrawCircle(allCircles[i].location, allCircles[i].radius);
 			if (timer <= allCircles[i].milisecondTime) {
 				ofNoFill();
 				int outerRadius = allCircles[i].radius - ((timer - allCircles[i].milisecondTime) / 20);
-				ofCircle(allCircles[i].location, outerRadius);
+				ofDrawCircle(allCircles[i].location, outerRadius);
 			}
 			ofSetColor(255, 255, 255);
 			ofFill();
@@ -92,6 +92,36 @@ void ofApp::draw(){
 			allCircles[i].deleteCircle();
 		}
 	}
+	//ofSetPolyMode(OF_POLY_WINDING_NONZERO);
+	//ofBeginShape();
+	//ofVertex(400, 135);
+	//ofVertex(215, 135);
+	//ofVertex(365, 25);
+	//ofVertex(305, 200);
+	//ofVertex(250, 25);
+	//ofEndShape();
+	ofPoint p1(400, 400);
+	ofPoint p2(500, 300);
+	ofPoint p3(600, 600);
+	ofDrawCircle(p1, radius);
+	ofDrawCircle(p3, radius);
+	ofPolyline poly;
+	poly.quadBezierTo(p1, p2, p3);
+	ofSetLineWidth(600);
+	poly.draw();
+	/*ofPath path;
+	for (int i = 0; i < poly.getVertices().size(); i++) {
+		if (i == 0) {
+			path.newSubPath();
+			path.moveTo(poly.getVertices()[i]);
+		}
+		else {
+			path.lineTo(poly.getVertices()[i]);
+		}
+	}
+	path.close();
+	path.simplify();
+	path.draw();*/
 }
 
 //--------------------------------------------------------------
