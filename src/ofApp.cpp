@@ -109,6 +109,7 @@ void ofApp::draw(){
 	poly.quadBezierTo(p1, p2, p3);
 	ofSetLineWidth(600);
 	poly.draw();
+	ofDrawCircle(poly.getPointAtIndexInterpolated(timer / 100), radius);
 	/*ofPath path;
 	for (int i = 0; i < poly.getVertices().size(); i++) {
 		if (i == 0) {
