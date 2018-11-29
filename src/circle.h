@@ -9,7 +9,6 @@ public:
 	int yCoord;
 	bool clicked;
 	bool deleted;
-	bool inside(float x, float y);
 	int getTimeError(int timeClicked);
 	int scoreClick(int timeError);
 	circle(int time, int x, int y, int radius);

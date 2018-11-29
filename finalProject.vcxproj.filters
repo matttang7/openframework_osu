@@ -61,7 +61,7 @@
     <ClCompile Include="src\jsoncpp.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="slider.cpp">
+    <ClCompile Include="src\slider.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -152,7 +152,7 @@
     <ClInclude Include="src\circle.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="slider.h">
+    <ClInclude Include="src\slider.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

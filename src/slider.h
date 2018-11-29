@@ -2,10 +2,9 @@
 #include "ofxGui.h"
 class slider {
 public:
-	ofPoint point1;
+	ofPoint pointOne;
 	ofPoint control;
-	ofPoint point2;
-	int radius;
+	ofPoint pointTwo;
 	int startTime;
 	int endTime;
 	int xCoordOne;
@@ -14,9 +13,9 @@ public:
 	int yCoordCtr;
 	int xCoordTwo;
 	int yCoordTwo;
+	int totalTime;
 	bool deleted;
-	//int getTimeError(int timeClicked);
-	//int scoreClick(int timeError);
-	//slider(int);
-	//void deleteCircle();
+	slider(int startTime, int xOne, int yOne, int xCtr, int yCtr, int endTime, int xTwo, int yTwo);
+	bool inside(float x, float y);
+	void deleteSlider();
 };

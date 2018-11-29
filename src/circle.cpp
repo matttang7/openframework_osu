@@ -1,10 +1,5 @@
 #include "circle.h"
 
-bool circle::inside(float x, float y)
-{
-	return false;
-}
-
 int circle::getTimeError(int timeClicked)
 {
 	int error = abs(timeClicked - milisecondTime);

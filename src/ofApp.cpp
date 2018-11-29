@@ -58,6 +58,7 @@ void ofApp::draw(){
 	ofSetColor(255, 0, 0);
 	text.drawString(to_string(combo) + "x", 0,ofGetHeight());
 	ofSetColor(255, 255, 255);
+	ofSetLineWidth(600);
 	if (timer >= endTime) {
 		timerEnd = true;
 	}
@@ -92,37 +93,28 @@ void ofApp::draw(){
 			allCircles[i].deleteCircle();
 		}
 	}
-	//ofSetPolyMode(OF_POLY_WINDING_NONZERO);
-	//ofBeginShape();
-	//ofVertex(400, 135);
-	//ofVertex(215, 135);
-	//ofVertex(365, 25);
-	//ofVertex(305, 200);
-	//ofVertex(250, 25);
-	//ofEndShape();
 	ofPoint p1(400, 400);
 	ofPoint p2(500, 300);
 	ofPoint p3(600, 600);
-	ofDrawCircle(p1, radius);
-	ofDrawCircle(p3, radius);
+	slider s(5000, 400, 400, 500, 300, 7000, 600, 600);
 	ofPolyline poly;
-	poly.quadBezierTo(p1, p2, p3);
-	ofSetLineWidth(600);
-	poly.draw();
-	ofDrawCircle(poly.getPointAtIndexInterpolated(timer / 100), radius);
-	/*ofPath path;
-	for (int i = 0; i < poly.getVertices().size(); i++) {
-		if (i == 0) {
-			path.newSubPath();
-			path.moveTo(poly.getVertices()[i]);
+	poly.quadBezierTo(s.pointOne, s.control, s.pointTwo);
+	if (timer >= s.startTime - 1000 && timer <= s.endTime + 300) {
+		ofSetColor(0, 0, 0);
+		ofDrawCircle(s.pointOne, radius);
+		ofDrawCircle(s.pointTwo, radius);
+		poly.draw();
+		if (timer <= s.startTime) {
+			ofNoFill();
+			int outerRadius = radius - ((timer - s.startTime) / 20);
+			ofDrawCircle(s.pointOne, outerRadius);
 		}
-		else {
-			path.lineTo(poly.getVertices()[i]);
+		if (timer >= s.startTime) {
+			ofDrawCircle(poly.getPointAtIndexInterpolated(((timer-s.startTime)/s.totalTime) * 21), radius);
 		}
+		ofSetColor(255, 255, 255);
+		ofFill();
 	}
-	path.close();
-	path.simplify();
-	path.draw();*/
 }
 
 //--------------------------------------------------------------
