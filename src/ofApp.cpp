@@ -11,6 +11,7 @@ void ofApp::setup(){
 	radius = 50;
 	life = 10000;
 	combo = 0;
+	totalScore = 0;
 	bCircleButton = false;
 	clickedTimedButton = false;
 	shelter.load("shelter.mp3");
@@ -150,9 +151,13 @@ void ofApp::mouseMoved(int x, int y ){
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
 	for (int i = 0; i < allSliders.size(); i++) {
-		if (timer >= allSliders[i].startTime - 1000 && timer <= allSliders[i].endTime) {
-			if (timer >= allSliders[i].startTime) {
-				ofDrawCircle(allSliders[i].path.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * 21), radius);
+		if (timer >= allSliders[i].startTime) {
+			ofPoint p = allSliders[i].path.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * allSliders[i].path.size());
+			if (p.distance(ofPoint(x, y)) < radius) {
+				if (allSliders[i].totalPoints > 0) {
+					allSliders[i].totalPoints--;
+					totalScore += combo;
+				}
 			}
 		}
 	}
@@ -172,9 +177,14 @@ void ofApp::mousePressed(int x, int y, int button){
 	for (int i = 0; i < allCircles.size(); i++) {
 		if (allCircles[i].location.distance(ofPoint(x, y)) < allCircles[i].radius && !allCircles[i].clicked && timer >= allCircles[i].milisecondTime - 300 ) {
 			std::cout << "clicked" << std::endl;
-			std::cout<<allCircles[i].getTimeError(timer)<<std::endl;
 			int score = allCircles[i].scoreClick(allCircles[i].getTimeError(timer));
-			std::cout<< score <<std::endl;
+			std::cout << score << std::endl;
+			if (combo == 0) {
+				totalScore += score;
+			}
+			else {
+				totalScore += (score * combo);
+			}
 			if (score > 0) {
 				combo++;
 				life += 800;
@@ -186,6 +196,7 @@ void ofApp::mousePressed(int x, int y, int button){
 			allCircles[i].deleteCircle();
 		}
 	}
+	std::cout << totalScore << std::endl;
 }
 
 //--------------------------------------------------------------

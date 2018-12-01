@@ -15,11 +15,7 @@ slider::slider(int start, int xOne, int yOne, int xCtr, int yCtr, int end, int x
 	control.set(xCtr, yCtr);
 	pointTwo.set(xTwo, yTwo);
 	path.quadBezierTo(pointOne, control, pointTwo);
-}
-
-bool slider::inside(float x, float y)
-{
-	return false;
+	totalPoints = (endTime - startTime);
 }
 
 void slider::deleteSlider()

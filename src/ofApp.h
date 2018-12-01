@@ -21,6 +21,7 @@ public:
 	bool clickedTimedButton;
 	int radius;
 	int life;
+	int totalScore;
 	void setup();
 	void update();
 	void draw();

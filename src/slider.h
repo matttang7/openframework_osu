@@ -16,7 +16,7 @@ public:
 	int yCoordTwo;
 	int totalTime;
 	bool deleted;
+	int totalPoints;
 	slider(int startTime, int xOne, int yOne, int xCtr, int yCtr, int endTime, int xTwo, int yTwo);
-	bool inside(float x, float y);
 	void deleteSlider();
 };
