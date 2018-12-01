@@ -4,15 +4,16 @@
 #include "ofxGui.h"
 #include "circle.h"
 #include "slider.h"
-#include "json/json.h"
-#include "json/include/nlohmann/json.hpp"
+#include <json.hpp>
 #include <iostream>
 #include <fstream>
+using namespace circleSpace;
 class ofApp : public ofBaseApp {
 
 public:
 	float timer;
 	vector<circle> allCircles;
+	vector<slider> allSliders;
 	//ofPoint circleButton;
 	bool bCircleButton;
 	ofPoint timedButton;

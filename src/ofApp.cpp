@@ -37,6 +37,13 @@ void ofApp::setup(){
 	allCircles.push_back(circle(17557, 500, 400, radius));
 	allCircles.push_back(circle(17749, 700, 700, radius));
 	allCircles.push_back(circle(18133, 750, 200, radius));
+	//std::ifstream i("map.json");
+	//json j;
+	////i >> j;
+	//std::ofstream o("pretty.json");
+	//o << std::setw(4) << j << std::endl;
+	allSliders.push_back(slider(20000, 400, 400, 500, 300, 22000, 600, 600));
+	allSliders.push_back(slider(25000, 300, 300, 400, 400, 27000, 500, 500));
 }
 
 //--------------------------------------------------------------
@@ -96,24 +103,25 @@ void ofApp::draw(){
 	ofPoint p1(400, 400);
 	ofPoint p2(500, 300);
 	ofPoint p3(600, 600);
-	slider s(5000, 400, 400, 500, 300, 7000, 600, 600);
-	ofPolyline poly;
-	poly.quadBezierTo(s.pointOne, s.control, s.pointTwo);
-	if (timer >= s.startTime - 1000 && timer <= s.endTime + 300) {
-		ofSetColor(0, 0, 0);
-		ofDrawCircle(s.pointOne, radius);
-		ofDrawCircle(s.pointTwo, radius);
-		poly.draw();
-		if (timer <= s.startTime) {
-			ofNoFill();
-			int outerRadius = radius - ((timer - s.startTime) / 20);
-			ofDrawCircle(s.pointOne, outerRadius);
+	for (int i = 0; i < allSliders.size(); i++) {
+		ofPolyline poly;
+		poly.quadBezierTo(allSliders[i].pointOne, allSliders[i].control, allSliders[i].pointTwo);
+		if (timer >= allSliders[i].startTime - 1000 && timer <= allSliders[i].endTime) {
+			ofSetColor(0, 0, 0);
+			ofDrawCircle(allSliders[i].pointOne, radius);
+			ofDrawCircle(allSliders[i].pointTwo, radius);
+			poly.draw();
+			if (timer <= allSliders[i].startTime) {
+				ofNoFill();
+				int outerRadius = radius - ((timer - allSliders[i].startTime) / 20);
+				ofDrawCircle(allSliders[i].pointOne, outerRadius);
+			}
+			if (timer >= allSliders[i].startTime) {
+				ofDrawCircle(poly.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * 21), radius);
+			}
+			ofSetColor(255, 255, 255);
+			ofFill();
 		}
-		if (timer >= s.startTime) {
-			ofDrawCircle(poly.getPointAtIndexInterpolated(((timer-s.startTime)/s.totalTime) * 21), radius);
-		}
-		ofSetColor(255, 255, 255);
-		ofFill();
 	}
 }
 
@@ -124,7 +132,7 @@ void ofApp::keyPressed(int key){
 		startTime = ofGetElapsedTimeMillis();
 		clickedTimedButton = false;
 	}
-	if (key == 'z') {
+	if (key == 'z' || key == 'x') {
 		mousePressed(ofGetMouseX(), ofGetMouseY(), 0);
 	}
 }
@@ -141,7 +149,13 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+	for (int i = 0; i < allSliders.size(); i++) {
+		if (timer >= allSliders[i].startTime - 1000 && timer <= allSliders[i].endTime) {
+			if (timer >= allSliders[i].startTime) {
+				ofDrawCircle(allSliders[i].path.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * 21), radius);
+			}
+		}
+	}
 }
 
 //--------------------------------------------------------------

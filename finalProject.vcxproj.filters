@@ -58,9 +58,6 @@
     <ClCompile Include="src\circle.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\jsoncpp.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\slider.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -155,6 +152,9 @@
     <ClInclude Include="src\slider.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\json.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
@@ -163,5 +163,10 @@
     <Text Include="src\map.txt">
       <Filter>src</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\map.json">
+      <Filter>src</Filter>
+    </None>
   </ItemGroup>
 </Project>

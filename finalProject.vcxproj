@@ -201,7 +201,6 @@
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\libs\tinyxmlparser.cpp" />
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp" />
     <ClCompile Include="src\circle.cpp" />
-    <ClCompile Include="src\jsoncpp.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\slider.cpp" />
@@ -224,6 +223,7 @@
     <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
     <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
     <ClInclude Include="src\circle.h" />
+    <ClInclude Include="src\json.hpp" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\slider.h" />
   </ItemGroup>
@@ -241,6 +241,9 @@
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\map.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\map.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

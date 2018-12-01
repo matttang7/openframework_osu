@@ -14,6 +14,7 @@ slider::slider(int start, int xOne, int yOne, int xCtr, int yCtr, int end, int x
 	pointOne.set(xOne, yOne);
 	control.set(xCtr, yCtr);
 	pointTwo.set(xTwo, yTwo);
+	path.quadBezierTo(pointOne, control, pointTwo);
 }
 
 bool slider::inside(float x, float y)

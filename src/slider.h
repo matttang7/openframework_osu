@@ -5,6 +5,7 @@ public:
 	ofPoint pointOne;
 	ofPoint control;
 	ofPoint pointTwo;
+	ofPolyline path;
 	int startTime;
 	int endTime;
 	int xCoordOne;
