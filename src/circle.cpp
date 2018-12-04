@@ -1,5 +1,6 @@
 #include "circle.h"
 using namespace circleSpace;
+using nlohmann::json;
 int circle::getTimeError(int timeClicked)
 {
 	int error = abs(timeClicked - milisecondTime);
@@ -36,14 +37,15 @@ void circle::deleteCircle()
 	deleted = true;
 }
 
-inline void circleSpace::to_json(json & j, const circle & circle)
-{
-}
-
-inline void circleSpace::from_json(const json & j, circle & circle)
-{
-	/*j.at("time").get_to(circle.milisecondTime);
-	j.at("x").get_to(circle.xCoord);
-	j.at("y").get_to(circle.yCoord);*/
-}
+//inline void circleSpace::to_json(json & j, const circle & c)
+//{
+//	j = json{ {"time", c.milisecondTime}, {"xCoord", c.xCoord}, {"yCoord", c.yCoord} };
+//}
+//
+//inline void circleSpace::from_json(const json & j, circle & c)
+//{
+//	j.at("time").get_to(c.milisecondTime);
+//	j.at("x").get_to(c.xCoord);
+//	j.at("y").get_to(c.yCoord);
+//}
 

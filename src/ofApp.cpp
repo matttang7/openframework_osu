@@ -38,13 +38,16 @@ void ofApp::setup(){
 	allCircles.push_back(circle(17557, 500, 400, radius));
 	allCircles.push_back(circle(17749, 700, 700, radius));
 	allCircles.push_back(circle(18133, 750, 200, radius));
-	//std::ifstream i("map.json");
+	///*std::ifstream i("map.json");
 	//json j;
-	////i >> j;
-	//std::ofstream o("pretty.json");
+	//i >> j;
+	//std::ofstream o("pretty.json");*/
 	//o << std::setw(4) << j << std::endl;
 	allSliders.push_back(slider(20000, 400, 400, 500, 300, 22000, 600, 600));
 	allSliders.push_back(slider(25000, 300, 300, 400, 400, 27000, 500, 500));
+	center = { ofGetWidth() / 2, ofGetHeight() / 2 };
+	ofSetCircleResolution(100);
+	angle = 0;
 }
 
 //--------------------------------------------------------------
@@ -124,6 +127,38 @@ void ofApp::draw(){
 			ofFill();
 		}
 	}
+
+
+
+	ofPushMatrix();
+	ofTranslate(center);
+	ofRotateRad(-angle);
+
+	ofFill();
+	ofSetColor(220);
+	ofDrawCircle(0, 0, spinnerRadius);
+
+	ofSetLineWidth(3);
+	ofNoFill();
+	ofSetColor(150);
+	ofDrawCircle(0, 0, spinnerRadius);
+	ofDrawLine(0, 0, spinnerRadius, 0);
+
+
+	ofPopMatrix();
+	ofFill();
+
+	stringstream s;
+	s << "Angle: " << angle;
+
+	s << "\nmouse - c: " << (currentMouse - center);
+	s << "\np mouse - c: " << (prevMouse - center);
+	s << "\ncurrent mouse: " << currentMouse;
+	s << "\np mouse: " << prevMouse;
+	s << "\nRevolutions: " << angle / glm::two_pi<float>();
+
+	ofDrawBitmapStringHighlight(s.str(), 20, 20);
+	ofSetColor(255, 255, 255);
 }
 
 //--------------------------------------------------------------
@@ -161,6 +196,24 @@ void ofApp::mouseDragged(int x, int y, int button){
 			}
 		}
 	}
+
+	if (ofDist(x, y, center.x, center.y) <= spinnerRadius) {
+		currentMouse = { x,y };
+		if (currentMouse != prevMouse) {
+			//		b = glm::acos(glm::dot(glm::normalize(m - c), glm::normalize(prevMouse - c)));
+			auto d = currentMouse - center;
+			auto pd = prevMouse - center;
+			float diff = ofAngleDifferenceRadians(atan2(d.y, d.x), atan2(pd.y, pd.x));
+			if (!isnan(diff)) {
+				std::cout << "reached"<<std::endl;
+				std::cout << angle << std::endl;
+				angle += diff;
+				std::cout << diff << std::endl;
+				std::cout << angle << std::endl;
+			}
+		}
+		prevMouse = currentMouse;
+	}
 }
 
 //--------------------------------------------------------------
@@ -197,6 +250,8 @@ void ofApp::mousePressed(int x, int y, int button){
 		}
 	}
 	std::cout << totalScore << std::endl;
+
+	prevMouse = { x,y };
 }
 
 //--------------------------------------------------------------
