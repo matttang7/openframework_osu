@@ -1,5 +1,5 @@
 #include "spinner.h"
-
+#include <cmath>
 spinner::spinner(int start, int end)
 {
 	startTime = start;
@@ -10,5 +10,5 @@ spinner::spinner(int start, int end)
 
 int spinner::scoreSpin()
 {
-	return 100 * revolutions;
+	return 100 * abs(revolutions);
 }

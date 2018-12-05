@@ -49,6 +49,5 @@ public:
 	int combo;
 	float angle,spinnerRadius = 400;
 	glm::vec2  prevMouse, currentMouse, center;
-	circle testCircle;
 	int revolutions;
 };

@@ -41,10 +41,9 @@ void ofApp::setup(){
 	std::ifstream i("map.json");
 	json j;
 	i >> j;
-	//testCircle = j;
 	allSliders.push_back(slider(20000, 400, 400, 500, 300, 22000, 600, 600));
 	allSliders.push_back(slider(25000, 300, 300, 400, 400, 27000, 500, 500));
-	allSpinners.push_back(spinner(0, 2000));
+	allSpinners.push_back(spinner(10000, 15000));
 	center = { ofGetWidth() / 2, ofGetHeight() / 2 };
 	ofSetCircleResolution(100);
 	angle = 0;
@@ -212,9 +211,13 @@ void ofApp::mouseDragged(int x, int y, int button){
 			}
 		}
 		else if (!allSpinners[i].scored && timer >= allSpinners[i].endTime) {
-			totalScore += allSpinners[i].scoreSpin() * combo;
+			if (combo == 0) {
+				totalScore += allSpinners[i].scoreSpin();
+			}
+			else {
+				totalScore += allSpinners[i].scoreSpin() * combo;
+			}
 			combo++;
-			std::cout << totalScore;
 			allSpinners[i].scored = true;
 		}
 	}
