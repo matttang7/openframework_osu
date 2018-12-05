@@ -204,6 +204,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\slider.cpp" />
+    <ClCompile Include="src\spinner.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxBaseGui.h" />
@@ -226,6 +227,7 @@
     <ClInclude Include="src\json.hpp" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\slider.h" />
+    <ClInclude Include="src\spinner.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="$(OF_ROOT)\libs\openFrameworksCompiled\project\vs\openframeworksLib.vcxproj">
@@ -243,7 +245,7 @@
     <Text Include="src\map.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\map.json" />
+    <None Include="map.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

@@ -61,6 +61,9 @@
     <ClCompile Include="src\slider.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\spinner.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -155,6 +158,9 @@
     <ClInclude Include="src\json.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\spinner.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
@@ -165,7 +171,7 @@
     </Text>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\map.json">
+    <None Include="map.json">
       <Filter>src</Filter>
     </None>
   </ItemGroup>

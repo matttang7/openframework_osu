@@ -37,15 +37,16 @@ void circle::deleteCircle()
 	deleted = true;
 }
 
-//inline void circleSpace::to_json(json & j, const circle & c)
-//{
-//	j = json{ {"time", c.milisecondTime}, {"xCoord", c.xCoord}, {"yCoord", c.yCoord} };
-//}
-//
-//inline void circleSpace::from_json(const json & j, circle & c)
-//{
-//	j.at("time").get_to(c.milisecondTime);
-//	j.at("x").get_to(c.xCoord);
-//	j.at("y").get_to(c.yCoord);
-//}
+inline void circleSpace::to_json(json & j, const circle & c)
+{
+	j = json{ {"time", c.milisecondTime}, {"xCoord", c.xCoord}, {"yCoord", c.yCoord} };
+}
+
+inline void circleSpace::from_json(const json & j, circle & c)
+{
+	j.at("time").get<decltype(c.milisecondTime)>();
+	j.at("x").get<decltype(c.xCoord)>();
+	j.at("y").get<decltype(c.yCoord)>();
+	//j.at("circle").get<decltype(c.circles)>();
+}
 

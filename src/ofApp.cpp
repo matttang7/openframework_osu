@@ -38,13 +38,13 @@ void ofApp::setup(){
 	allCircles.push_back(circle(17557, 500, 400, radius));
 	allCircles.push_back(circle(17749, 700, 700, radius));
 	allCircles.push_back(circle(18133, 750, 200, radius));
-	///*std::ifstream i("map.json");
-	//json j;
-	//i >> j;
-	//std::ofstream o("pretty.json");*/
-	//o << std::setw(4) << j << std::endl;
+	std::ifstream i("map.json");
+	json j;
+	i >> j;
+	//testCircle = j;
 	allSliders.push_back(slider(20000, 400, 400, 500, 300, 22000, 600, 600));
 	allSliders.push_back(slider(25000, 300, 300, 400, 400, 27000, 500, 500));
+	allSpinners.push_back(spinner(0, 2000));
 	center = { ofGetWidth() / 2, ofGetHeight() / 2 };
 	ofSetCircleResolution(100);
 	angle = 0;
@@ -82,11 +82,7 @@ void ofApp::draw(){
 		ofDrawCircle(getTimeButton, radius);
 		ofSetColor(255, 255, 255);
 	}
-	//if (bCircleButton)
-	//	ofSetColor(ofColor::sandyBrown);
-	//else
-	//	ofSetColor(ofColor::white);
-	//ofDrawCircle(circleButton, radius);
+
 	for (int i = 0; i < allCircles.size(); i++) {
 		if (timer >= allCircles[i].milisecondTime - 1000 && timer <= allCircles[i].milisecondTime + 300) {
 			ofSetColor(0, 0, 0);
@@ -104,9 +100,7 @@ void ofApp::draw(){
 			allCircles[i].deleteCircle();
 		}
 	}
-	ofPoint p1(400, 400);
-	ofPoint p2(500, 300);
-	ofPoint p3(600, 600);
+
 	for (int i = 0; i < allSliders.size(); i++) {
 		ofPolyline poly;
 		poly.quadBezierTo(allSliders[i].pointOne, allSliders[i].control, allSliders[i].pointTwo);
@@ -129,35 +123,38 @@ void ofApp::draw(){
 	}
 
 
+	for (int i = 0; i < allSpinners.size(); i++) {
+		if (timer >= allSpinners[i].startTime && timer <= allSpinners[i].endTime) {
+			ofPushMatrix();
+			ofTranslate(center);
+			ofRotateRad(-angle);
 
-	ofPushMatrix();
-	ofTranslate(center);
-	ofRotateRad(-angle);
+			ofFill();
+			ofSetColor(220);
+			ofDrawCircle(0, 0, spinnerRadius);
 
-	ofFill();
-	ofSetColor(220);
-	ofDrawCircle(0, 0, spinnerRadius);
-
-	ofSetLineWidth(3);
-	ofNoFill();
-	ofSetColor(150);
-	ofDrawCircle(0, 0, spinnerRadius);
-	ofDrawLine(0, 0, spinnerRadius, 0);
+			ofSetLineWidth(3);
+			ofNoFill();
+			ofSetColor(150);
+			ofDrawCircle(0, 0, spinnerRadius);
+			ofDrawLine(0, 0, spinnerRadius, 0);
 
 
-	ofPopMatrix();
-	ofFill();
+			ofPopMatrix();
+			ofFill();
 
-	stringstream s;
-	s << "Angle: " << angle;
+			stringstream s;
+			s << "Angle: " << angle;
 
-	s << "\nmouse - c: " << (currentMouse - center);
-	s << "\np mouse - c: " << (prevMouse - center);
-	s << "\ncurrent mouse: " << currentMouse;
-	s << "\np mouse: " << prevMouse;
-	s << "\nRevolutions: " << angle / glm::two_pi<float>();
+			s << "\nmouse - c: " << (currentMouse - center);
+			s << "\np mouse - c: " << (prevMouse - center);
+			s << "\ncurrent mouse: " << currentMouse;
+			s << "\np mouse: " << prevMouse;
+			s << "\nRevolutions: " << angle / glm::two_pi<float>();
 
-	ofDrawBitmapStringHighlight(s.str(), 20, 20);
+			ofDrawBitmapStringHighlight(s.str(), 20, 20);
+		}
+	}
 	ofSetColor(255, 255, 255);
 }
 
@@ -197,22 +194,29 @@ void ofApp::mouseDragged(int x, int y, int button){
 		}
 	}
 
-	if (ofDist(x, y, center.x, center.y) <= spinnerRadius) {
-		currentMouse = { x,y };
-		if (currentMouse != prevMouse) {
-			//		b = glm::acos(glm::dot(glm::normalize(m - c), glm::normalize(prevMouse - c)));
-			auto d = currentMouse - center;
-			auto pd = prevMouse - center;
-			float diff = ofAngleDifferenceRadians(atan2(d.y, d.x), atan2(pd.y, pd.x));
-			if (!isnan(diff)) {
-				std::cout << "reached"<<std::endl;
-				std::cout << angle << std::endl;
-				angle += diff;
-				std::cout << diff << std::endl;
-				std::cout << angle << std::endl;
+	for (int i = 0; i < allSpinners.size(); i++) {
+		if (!allSpinners[i].scored && timer >= allSpinners[i].startTime && timer <= allSpinners[i].endTime) {
+			if (ofDist(x, y, center.x, center.y) <= spinnerRadius) {
+				currentMouse = { x,y };
+				if (currentMouse != prevMouse) {
+					//		b = glm::acos(glm::dot(glm::normalize(m - c), glm::normalize(prevMouse - c)));
+					auto d = currentMouse - center;
+					auto pd = prevMouse - center;
+					float diff = ofAngleDifferenceRadians(atan2(d.y, d.x), atan2(pd.y, pd.x));
+					if (!isnan(diff)) {
+						angle += diff;
+					}
+					allSpinners[i].revolutions = angle / glm::two_pi<float>();
+				}
+				prevMouse = currentMouse;
 			}
 		}
-		prevMouse = currentMouse;
+		else if (!allSpinners[i].scored && timer >= allSpinners[i].endTime) {
+			totalScore += allSpinners[i].scoreSpin() * combo;
+			combo++;
+			std::cout << totalScore;
+			allSpinners[i].scored = true;
+		}
 	}
 }
 

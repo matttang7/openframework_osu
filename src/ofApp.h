@@ -4,6 +4,7 @@
 #include "ofxGui.h"
 #include "circle.h"
 #include "slider.h"
+#include "spinner.h"
 #include <json.hpp>
 #include <iostream>
 #include <fstream>
@@ -14,6 +15,7 @@ public:
 	float timer;
 	vector<circle> allCircles;
 	vector<slider> allSliders;
+	vector<spinner> allSpinners;
 	//ofPoint circleButton;
 	bool bCircleButton;
 	ofPoint timedButton;
@@ -47,4 +49,6 @@ public:
 	int combo;
 	float angle,spinnerRadius = 400;
 	glm::vec2  prevMouse, currentMouse, center;
+	circle testCircle;
+	int revolutions;
 };
