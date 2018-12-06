@@ -2,7 +2,8 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	background.load("shelterBackground.jpg");
-	text.loadFont("bebas.ttf", 50);
+	text.loadFont("bebas.ttf", 25);
+	textCombo.loadFont("bebas.ttf", 50);
 	timerEnd = false;
 	startTime = ofGetElapsedTimeMillis();
 	//circleButton.set(100, 100);
@@ -39,6 +40,7 @@ void ofApp::setup(){
 	std::ifstream i("map.json");
 	json j;
 	i >> j;
+	std::cout << j["circles"][1]["time"];
 	allSliders.push_back(slider(20000, 400, 400, 500, 300, 22000, 600, 600));
 	allSliders.push_back(slider(25000, 300, 300, 400, 400, 27000, 500, 500));
 	allSpinners.push_back(spinner(30000, 35000));
@@ -57,7 +59,7 @@ void ofApp::update(){
 		//or do sth else
 	}
 	if (life <= timer) {
-		ofExit();
+		//ofExit();
 	}
 }
 
@@ -67,7 +69,7 @@ void ofApp::draw(){
 	float barWidth = 600;
 	timer = ofGetElapsedTimeMillis() - startTime;
 	ofSetColor(255, 0, 0);
-	text.drawString(to_string(combo) + "x", 0,ofGetHeight());
+	textCombo.drawString(to_string(combo) + "x", 0,ofGetHeight());
 	ofSetColor(255, 255, 255);
 	ofSetLineWidth(600);
 	if (timer >= endTime) {
@@ -98,7 +100,7 @@ void ofApp::draw(){
 				ofDrawCircle(allCircles[i].location, outerRadius);
 			}
 			ofSetColor(255, 255, 255);
-			text.drawString(to_string(allCircles[i].displayNum), allCircles[i].xCoord, allCircles[i].yCoord);
+			text.drawString(to_string(allCircles[i].displayNum), allCircles[i].xCoord - 8, allCircles[i].yCoord + 15);
 			ofFill();
 		}
 		else if (timer >= allCircles[i].milisecondTime + 500 && !allCircles[i].clicked && !allCircles[i].deleted) {
@@ -134,7 +136,7 @@ void ofApp::draw(){
 				ofDrawCircle(poly.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * 21), radius);
 			}
 			ofSetColor(255, 255, 255);
-			text.drawString(to_string(allSliders[i].displayNum), allSliders[i].pointOne.x, allSliders[i].pointOne.y);
+			text.drawString(to_string(allSliders[i].displayNum), allSliders[i].pointOne.x - 8, allSliders[i].pointOne.y + 15);
 			ofFill();
 		}
 	}

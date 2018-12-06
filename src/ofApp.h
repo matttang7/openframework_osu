@@ -43,6 +43,7 @@ public:
 	ofxPanel gui;
 	ofParameter<float> endTime;
 	ofTrueTypeFont text;
+	ofTrueTypeFont textCombo;
 	ofSoundPlayer unravel;
 	ofSoundPlayer shelter;
 	ofImage background;

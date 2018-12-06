@@ -166,11 +166,6 @@
     <ResourceCompile Include="icon.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\map.txt">
-      <Filter>src</Filter>
-    </Text>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="map.json">
       <Filter>src</Filter>
     </None>
