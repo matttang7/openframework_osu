@@ -3,8 +3,6 @@
 void ofApp::setup(){
 	background.load("shelterBackground.jpg");
 	text.loadFont("bebas.ttf", 50);
-	gui.setup();
-	gui.add(endTime.set("endTime", 2000.0, 0.0, 6000.0));
 	timerEnd = false;
 	startTime = ofGetElapsedTimeMillis();
 	//circleButton.set(100, 100);
@@ -43,7 +41,7 @@ void ofApp::setup(){
 	i >> j;
 	allSliders.push_back(slider(20000, 400, 400, 500, 300, 22000, 600, 600));
 	allSliders.push_back(slider(25000, 300, 300, 400, 400, 27000, 500, 500));
-	allSpinners.push_back(spinner(10000, 15000));
+	allSpinners.push_back(spinner(30000, 35000));
 	center = { ofGetWidth() / 2, ofGetHeight() / 2 };
 	ofSetCircleResolution(100);
 	angle = 0;
@@ -62,7 +60,6 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 	background.draw(0,0,ofGetWidth(),ofGetHeight());
-	gui.draw();
 	float barWidth = 600;
 	timer = ofGetElapsedTimeMillis() - startTime;
 	ofSetColor(255, 0, 0);
@@ -74,13 +71,7 @@ void ofApp::draw(){
 	}
 	float timerBar = ofMap(life - timer, 0.0, 10000, 0.0, 1.0, true);
 	ofSetColor(255);
-	ofDrawRectangle(ofGetWidth() / 2 - 100, ofGetHeight() - 750, barWidth * timerBar, 30);
-	if (timer >= 0) {
-		getTimeButton.set(300, 600);
-		ofSetColor(255, 0, 0);
-		ofDrawCircle(getTimeButton, radius);
-		ofSetColor(255, 255, 255);
-	}
+	ofDrawRectangle(ofGetWidth() / 2 - 500, ofGetHeight() - 750, barWidth * timerBar, 30);
 
 	for (int i = 0; i < allCircles.size(); i++) {
 		if (timer >= allCircles[i].milisecondTime - 1000 && timer <= allCircles[i].milisecondTime + 300) {
@@ -176,26 +167,36 @@ void ofApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){           
-
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
 	for (int i = 0; i < allSliders.size(); i++) {
-		if (timer >= allSliders[i].startTime) {
+		if (timer >= allSliders[i].startTime && timer < allSliders[i].endTime) {
 			ofPoint p = allSliders[i].path.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * allSliders[i].path.size());
 			if (p.distance(ofPoint(x, y)) < radius) {
+				life+= 30;
 				if (allSliders[i].totalPoints > 0) {
 					allSliders[i].totalPoints--;
 					totalScore += combo;
 				}
+				if (allSliders[i].pointCounter < 25) {
+					allSliders[i].pointCounter++;
+				}
+				else {
+					allSliders[i].pointCounter = 0;
+					combo++;
+				}
+			}
+			else{
+				combo = 0;
 			}
 		}
 	}
 
 	for (int i = 0; i < allSpinners.size(); i++) {
 		if (!allSpinners[i].scored && timer >= allSpinners[i].startTime && timer <= allSpinners[i].endTime) {
-			if (ofDist(x, y, center.x, center.y) <= spinnerRadius) {
+			if (ofDist(x, y, center.x, center.y) <= spinnerRadius+50) {
 				currentMouse = { x,y };
 				if (currentMouse != prevMouse) {
 					//		b = glm::acos(glm::dot(glm::normalize(m - c), glm::normalize(prevMouse - c)));
@@ -219,6 +220,10 @@ void ofApp::mouseDragged(int x, int y, int button){
 			}
 			combo++;
 			allSpinners[i].scored = true;
+		}
+		if (abs(allSpinners[i].revolutions) >= allSpinners[i].revCounter) {
+			life += 400;
+			allSpinners[i].revCounter++;
 		}
 	}
 }

@@ -15,6 +15,7 @@ public:
 	int xCoordTwo;
 	int yCoordTwo;
 	int totalTime;
+	int pointCounter;
 	bool deleted;
 	int totalPoints;
 	slider(int startTime, int xOne, int yOne, int xCtr, int yCtr, int endTime, int xTwo, int yTwo);

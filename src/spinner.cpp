@@ -5,6 +5,7 @@ spinner::spinner(int start, int end)
 	startTime = start;
 	endTime = end;
 	revolutions = 0;
+	revCounter = 0;
 	scored = false;
 }
 

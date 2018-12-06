@@ -16,6 +16,8 @@ slider::slider(int start, int xOne, int yOne, int xCtr, int yCtr, int end, int x
 	pointTwo.set(xTwo, yTwo);
 	path.quadBezierTo(pointOne, control, pointTwo);
 	totalPoints = (endTime - startTime);
+	pointCounter = 0;
+	deleted = false;
 }
 
 void slider::deleteSlider()
@@ -23,4 +25,5 @@ void slider::deleteSlider()
 	pointOne.set(-300, -300);
 	control.set(-300, -300);
 	pointTwo.set(-300, -300);
+	deleted = true;
 }
