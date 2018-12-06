@@ -45,6 +45,7 @@ void ofApp::setup(){
 	center = { ofGetWidth() / 2, ofGetHeight() / 2 };
 	ofSetCircleResolution(100);
 	angle = 0;
+	toBeAssigned = 1;
 }
 
 //--------------------------------------------------------------
@@ -54,6 +55,9 @@ void ofApp::update(){
 	}
 	else {
 		//or do sth else
+	}
+	if (life <= timer) {
+		ofExit();
 	}
 }
 
@@ -75,7 +79,18 @@ void ofApp::draw(){
 
 	for (int i = 0; i < allCircles.size(); i++) {
 		if (timer >= allCircles[i].milisecondTime - 1000 && timer <= allCircles[i].milisecondTime + 300) {
-			ofSetColor(0, 0, 0);
+			if (!allCircles[i].assignedNum) {
+				allCircles[i].displayNum = toBeAssigned;
+				if (toBeAssigned < 9) {
+					toBeAssigned++;
+				}
+				else {
+					toBeAssigned = 1;
+				}
+				allCircles[i].assignedNum = true;
+			}
+
+			ofSetColor(ofColor::aqua);
 			ofDrawCircle(allCircles[i].location, allCircles[i].radius);
 			if (timer <= allCircles[i].milisecondTime) {
 				ofNoFill();
@@ -83,6 +98,7 @@ void ofApp::draw(){
 				ofDrawCircle(allCircles[i].location, outerRadius);
 			}
 			ofSetColor(255, 255, 255);
+			text.drawString(to_string(allCircles[i].displayNum), allCircles[i].xCoord, allCircles[i].yCoord);
 			ofFill();
 		}
 		else if (timer >= allCircles[i].milisecondTime + 500 && !allCircles[i].clicked && !allCircles[i].deleted) {
@@ -95,7 +111,17 @@ void ofApp::draw(){
 		ofPolyline poly;
 		poly.quadBezierTo(allSliders[i].pointOne, allSliders[i].control, allSliders[i].pointTwo);
 		if (timer >= allSliders[i].startTime - 1000 && timer <= allSliders[i].endTime) {
-			ofSetColor(0, 0, 0);
+			if (!allSliders[i].assignedNum) {
+				allSliders[i].displayNum = toBeAssigned;
+				if (toBeAssigned < 9) {
+					toBeAssigned++;
+				}
+				else {
+					toBeAssigned = 1;
+				}
+				allSliders[i].assignedNum = true;
+			}
+			ofSetColor(ofColor::aqua);
 			ofDrawCircle(allSliders[i].pointOne, radius);
 			ofDrawCircle(allSliders[i].pointTwo, radius);
 			poly.draw();
@@ -108,6 +134,7 @@ void ofApp::draw(){
 				ofDrawCircle(poly.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * 21), radius);
 			}
 			ofSetColor(255, 255, 255);
+			text.drawString(to_string(allSliders[i].displayNum), allSliders[i].pointOne.x, allSliders[i].pointOne.y);
 			ofFill();
 		}
 	}

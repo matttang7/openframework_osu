@@ -10,6 +10,8 @@ namespace circleSpace {
 		int milisecondTime;
 		int xCoord;
 		int yCoord;
+		int displayNum;
+		bool assignedNum;
 		bool clicked;
 		bool deleted;
 		int getTimeError(int timeClicked);

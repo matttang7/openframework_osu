@@ -18,6 +18,8 @@ slider::slider(int start, int xOne, int yOne, int xCtr, int yCtr, int end, int x
 	totalPoints = (endTime - startTime);
 	pointCounter = 0;
 	deleted = false;
+	displayNum = 0;
+	assignedNum = false;
 }
 
 void slider::deleteSlider()

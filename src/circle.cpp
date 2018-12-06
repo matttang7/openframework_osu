@@ -29,6 +29,8 @@ circle::circle(int time, int x, int y, int rad)
 	radius = rad;
 	clicked = false;
 	deleted = false;
+	displayNum = 0;
+	assignedNum = false;
 }
 
 void circle::deleteCircle()

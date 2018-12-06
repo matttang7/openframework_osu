@@ -47,6 +47,7 @@ public:
 	ofSoundPlayer shelter;
 	ofImage background;
 	int combo;
+	int toBeAssigned;
 	float angle,spinnerRadius = 350;
 	glm::vec2  prevMouse, currentMouse, center;
 	int revolutions;
