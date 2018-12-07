@@ -15,35 +15,43 @@ void ofApp::setup(){
 	clickedTimedButton = false;
 	shelter.load("shelter.mp3");
 	shelter.play();
-	allCircles.push_back(circle(3562, 600, 300, radius));
-	allCircles.push_back(circle(4138, 200, 200, radius));
-	allCircles.push_back(circle(4309, 500, 500, radius));
-	allCircles.push_back(circle(4800, 700, 700, radius));
-	allCircles.push_back(circle(6229, 600, 600, radius));
-	allCircles.push_back(circle(6784, 200, 200, radius));
-	allCircles.push_back(circle(6976, 500, 500, radius));
-	allCircles.push_back(circle(7424, 700, 700, radius));
-	allCircles.push_back(circle(8896, 400, 200, radius));
-	allCircles.push_back(circle(9514, 400, 600, radius));
-	allCircles.push_back(circle(10240, 200, 600, radius));
-	allCircles.push_back(circle(10880, 600, 400, radius));
-	allCircles.push_back(circle(11221, 100, 500, radius));
-	allCircles.push_back(circle(11626, 300, 500, radius));
-	allCircles.push_back(circle(14357, 550, 450, radius));
-	allCircles.push_back(circle(14954, 400, 300, radius));
-	allCircles.push_back(circle(15125, 350, 550, radius));
-	allCircles.push_back(circle(15552, 500, 400, radius));
-	allCircles.push_back(circle(16960, 300, 250, radius));
-	allCircles.push_back(circle(17557, 500, 400, radius));
-	allCircles.push_back(circle(17749, 700, 700, radius));
-	allCircles.push_back(circle(18133, 750, 200, radius));
+	//allCircles.push_back(circle(3562, 600, 300, radius));
+	//allCircles.push_back(circle(4138, 200, 200, radius));
+	//allCircles.push_back(circle(4309, 500, 500, radius));
+	//allCircles.push_back(circle(4800, 700, 700, radius));
+	//allCircles.push_back(circle(6229, 600, 600, radius));
+	//allCircles.push_back(circle(6784, 200, 200, radius));
+	//allCircles.push_back(circle(6976, 500, 500, radius));
+	//allCircles.push_back(circle(7424, 700, 700, radius));
+	//allCircles.push_back(circle(8896, 400, 200, radius));
+	//allCircles.push_back(circle(9514, 400, 600, radius));
+	//allCircles.push_back(circle(10240, 200, 600, radius));
+	//allCircles.push_back(circle(10880, 600, 400, radius));
+	//allCircles.push_back(circle(11221, 100, 500, radius));
+	//allCircles.push_back(circle(11626, 300, 500, radius));
+	//allCircles.push_back(circle(14357, 550, 450, radius));
+	//allCircles.push_back(circle(14954, 400, 300, radius));
+	//allCircles.push_back(circle(15125, 350, 550, radius));
+	//allCircles.push_back(circle(15552, 500, 400, radius));
+	//allCircles.push_back(circle(16960, 300, 250, radius));
+	//allCircles.push_back(circle(17557, 500, 400, radius));
+	//allCircles.push_back(circle(17749, 700, 700, radius));
+	//allCircles.push_back(circle(18133, 750, 200, radius));
+	//allSliders.push_back(slider(20000, 400, 400, 500, 300, 22000, 600, 600));
+	//allSliders.push_back(slider(25000, 300, 300, 400, 400, 27000, 500, 500));
+	//allSpinners.push_back(spinner(30000, 35000));
 	std::ifstream i("map.json");
 	json j;
 	i >> j;
-	std::cout << j["circles"][1]["time"];
-	allSliders.push_back(slider(20000, 400, 400, 500, 300, 22000, 600, 600));
-	allSliders.push_back(slider(25000, 300, 300, 400, 400, 27000, 500, 500));
-	allSpinners.push_back(spinner(30000, 35000));
+	double d = j["circles"][1]["time"];
+	for (int i = 0; i < j["circles"].size(); i++) {
+		allCircles.push_back(circle(j["circles"][i]["time"], j["circles"][i]["x"], j["circles"][i]["y"], radius));
+	}
+	for (int i = 0; i < j["sliders"].size(); i++) {
+		allSliders.push_back(slider(j["sliders"][i]["startTime"], j["sliders"][i]["startX"], j["sliders"][i]["startY"], 
+			j["sliders"][i]["controlX"], j["sliders"][i]["controlY"], j["sliders"][i]["endTime"], j["sliders"][i]["endX"], j["sliders"][i]["endY"]));
+	}
+
 	center = { ofGetWidth() / 2, ofGetHeight() / 2 };
 	ofSetCircleResolution(100);
 	angle = 0;
