@@ -51,6 +51,8 @@ public:
 	ofImage background;
 	int combo;
 	int toBeAssigned;
+	double accuracy;
+	bool accuracyDivided;
 	float angle,spinnerRadius = 350;
 	glm::vec2  prevMouse, currentMouse, center;
 	int revolutions;

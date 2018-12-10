@@ -21,30 +21,6 @@ void ofApp::setup(){
 	//jojo.play();
 	killlakill.load("killlakill.mp3");
 	killlakill.play();
-	//allCircles.push_back(circle(3562, 600, 300, radius));
-	//allCircles.push_back(circle(4138, 200, 200, radius));
-	//allCircles.push_back(circle(4309, 500, 500, radius));
-	//allCircles.push_back(circle(4800, 700, 700, radius));
-	//allCircles.push_back(circle(6229, 600, 600, radius));
-	//allCircles.push_back(circle(6784, 200, 200, radius));
-	//allCircles.push_back(circle(6976, 500, 500, radius));
-	//allCircles.push_back(circle(7424, 700, 700, radius));
-	//allCircles.push_back(circle(8896, 400, 200, radius));
-	//allCircles.push_back(circle(9514, 400, 600, radius));
-	//allCircles.push_back(circle(10240, 200, 600, radius));
-	//allCircles.push_back(circle(10880, 600, 400, radius));
-	//allCircles.push_back(circle(11221, 100, 500, radius));
-	//allCircles.push_back(circle(11626, 300, 500, radius));
-	//allCircles.push_back(circle(14357, 550, 450, radius));
-	//allCircles.push_back(circle(14954, 400, 300, radius));
-	//allCircles.push_back(circle(15125, 350, 550, radius));
-	//allCircles.push_back(circle(15552, 500, 400, radius));
-	//allCircles.push_back(circle(16960, 300, 250, radius));
-	//allCircles.push_back(circle(17557, 500, 400, radius));
-	//allCircles.push_back(circle(17749, 700, 700, radius));
-	//allCircles.push_back(circle(18133, 750, 200, radius));
-	//allSliders.push_back(slider(20000, 400, 400, 500, 300, 22000, 600, 600));
-	//allSliders.push_back(slider(25000, 300, 300, 400, 400, 27000, 500, 500));
 	allSpinners.push_back(spinner(30000, 35000));
 	std::ifstream i("map.json");
 	json j;
@@ -62,16 +38,12 @@ void ofApp::setup(){
 	ofSetCircleResolution(100);
 	angle = 0;
 	toBeAssigned = 1;
+	accuracy = 0;
+	accuracyDivided = false;
 }
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	if (bCircleButton) {
-		//do something
-	}
-	else {
-		//or do sth else
-	}
 	if (life <= timer/2 + 10000) {
 		//ofExit();
 	}
@@ -195,6 +167,17 @@ void ofApp::draw(){
 		}
 	}
 	ofSetColor(255, 255, 255);
+
+	if (!shelter.isPlaying() && !killlakill.isPlaying()) {
+		ofSetColor(ofColor::aqua);
+		std::cout << accuracy << std::endl;
+		if (!accuracyDivided) {
+			accuracy = accuracy / static_cast<double>(allCircles.size());
+			accuracyDivided = true;
+		}
+		text.drawString("Final Score: " + to_string(totalScore) + "\n Accuracy: " + to_string(accuracy), ofGetWidth() / 2, ofGetHeight() / 2);
+		ofSetColor(255, 255, 255);
+	}
 }
 
 //--------------------------------------------------------------
@@ -297,12 +280,14 @@ void ofApp::mousePressed(int x, int y, int button){
 			}
 			if (score == 100) {
 				combo++;
+				accuracy++;
 				if (life < timer/2 + 10000) {
 					life += 600;
 				}
 			}
 			else if (score == 50) {
 				combo++;
+				accuracy += 0.5;
 				if (life < timer/2 + 10000) {
 					life += 400;
 				}
