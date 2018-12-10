@@ -1,7 +1,9 @@
 #include "ofApp.h"
 //--------------------------------------------------------------
 void ofApp::setup(){
-	background.load("shelterBackground.jpg");
+	//background.load("shelterBackground.jpg");
+	//background.load("giorno.jpg");
+	background.load("killlakillbackground.jpg");
 	text.loadFont("bebas.ttf", 25);
 	textCombo.loadFont("bebas.ttf", 50);
 	timerEnd = false;
@@ -13,8 +15,12 @@ void ofApp::setup(){
 	totalScore = 0;
 	bCircleButton = false;
 	clickedTimedButton = false;
-	shelter.load("shelter.mp3");
-	shelter.play();
+	/*shelter.load("shelter.mp3");
+	shelter.play();*/
+	//jojo.load("jojo.mp3");
+	//jojo.play();
+	killlakill.load("killlakill.mp3");
+	killlakill.play();
 	//allCircles.push_back(circle(3562, 600, 300, radius));
 	//allCircles.push_back(circle(4138, 200, 200, radius));
 	//allCircles.push_back(circle(4309, 500, 500, radius));
@@ -39,7 +45,7 @@ void ofApp::setup(){
 	//allCircles.push_back(circle(18133, 750, 200, radius));
 	//allSliders.push_back(slider(20000, 400, 400, 500, 300, 22000, 600, 600));
 	//allSliders.push_back(slider(25000, 300, 300, 400, 400, 27000, 500, 500));
-	//allSpinners.push_back(spinner(30000, 35000));
+	allSpinners.push_back(spinner(30000, 35000));
 	std::ifstream i("map.json");
 	json j;
 	i >> j;
@@ -66,8 +72,14 @@ void ofApp::update(){
 	else {
 		//or do sth else
 	}
-	if (life <= timer) {
+	if (life <= timer/2 + 10000) {
 		//ofExit();
+	}
+	if (life > timer/2 + 10000) {
+		life -= 100;
+	}
+	if(ofGetKeyPressed('z') || ofGetKeyPressed('x')) {
+		mouseDragged(ofGetMouseX(), ofGetMouseY(), 0);
 	}
 }
 
@@ -78,13 +90,12 @@ void ofApp::draw(){
 	timer = ofGetElapsedTimeMillis() - startTime;
 	ofSetColor(255, 0, 0);
 	textCombo.drawString(to_string(combo) + "x", 0,ofGetHeight());
-	ofSetColor(255, 255, 255);
 	ofSetLineWidth(600);
 	if (timer >= endTime) {
 		timerEnd = true;
 	}
-	float timerBar = ofMap(life - timer, 0.0, 10000, 0.0, 1.0, true);
-	ofSetColor(255);
+	float timerBar = ofMap(life - timer/2, 0.0, 10000, 0.0, 1.0, true);
+	ofSetColor(ofColor::aqua);
 	ofDrawRectangle(ofGetWidth() / 2 - 500, ofGetHeight() - 750, barWidth * timerBar, 30);
 
 	for (int i = 0; i < allCircles.size(); i++) {
@@ -114,6 +125,7 @@ void ofApp::draw(){
 		else if (timer >= allCircles[i].milisecondTime + 500 && !allCircles[i].clicked && !allCircles[i].deleted) {
 			combo = 0;
 			allCircles[i].deleteCircle();
+			life -= 800;
 		}
 	}
 
@@ -212,7 +224,9 @@ void ofApp::mouseDragged(int x, int y, int button){
 		if (timer >= allSliders[i].startTime && timer < allSliders[i].endTime) {
 			ofPoint p = allSliders[i].path.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * allSliders[i].path.size());
 			if (p.distance(ofPoint(x, y)) < radius) {
-				life+= 30;
+				if (life < timer/2 + 10000) {
+					life += 30;
+				}
 				if (allSliders[i].totalPoints > 0) {
 					allSliders[i].totalPoints--;
 					totalScore += combo;
@@ -259,7 +273,9 @@ void ofApp::mouseDragged(int x, int y, int button){
 			allSpinners[i].scored = true;
 		}
 		if (abs(allSpinners[i].revolutions) >= allSpinners[i].revCounter) {
-			life += 400;
+			if (life < timer/2 + 10000) {
+				life += 400;
+			}
 			allSpinners[i].revCounter++;
 		}
 	}
@@ -267,17 +283,9 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-	/*if (circleButton.distance(ofPoint(x, y)) < radius) {
-		bCircleButton = !bCircleButton;
-	}*/
-	if (timedButton.distance(ofPoint(x, y)) < radius) {
-		clickedTimedButton = !clickedTimedButton;
-	}
-	if (getTimeButton.distance(ofPoint(x, y)) < radius) {
-		std::cout << shelter.getPositionMS() << std::endl;
-	}
 	for (int i = 0; i < allCircles.size(); i++) {
-		if (allCircles[i].location.distance(ofPoint(x, y)) < allCircles[i].radius && !allCircles[i].clicked && timer >= allCircles[i].milisecondTime - 300 ) {
+		if (allCircles[i].location.distance(ofPoint(x, y)) < allCircles[i].radius && !allCircles[i].clicked 
+			&& timer >= allCircles[i].milisecondTime - 300 && (i == 0 || allCircles[i-1].deleted)) {
 			std::cout << "clicked" << std::endl;
 			int score = allCircles[i].scoreClick(allCircles[i].getTimeError(timer));
 			std::cout << score << std::endl;
@@ -287,12 +295,21 @@ void ofApp::mousePressed(int x, int y, int button){
 			else {
 				totalScore += (score * combo);
 			}
-			if (score > 0) {
+			if (score == 100) {
 				combo++;
-				life += 800;
+				if (life < timer/2 + 10000) {
+					life += 600;
+				}
+			}
+			else if (score == 50) {
+				combo++;
+				if (life < timer/2 + 10000) {
+					life += 400;
+				}
 			}
 			else {
 				combo = 0;
+				life -= 800;
 			}
 			allCircles[i].clicked = true;
 			allCircles[i].deleteCircle();

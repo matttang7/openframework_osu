@@ -46,6 +46,8 @@ public:
 	ofTrueTypeFont textCombo;
 	ofSoundPlayer unravel;
 	ofSoundPlayer shelter;
+	ofSoundPlayer jojo;
+	ofSoundPlayer killlakill;
 	ofImage background;
 	int combo;
 	int toBeAssigned;

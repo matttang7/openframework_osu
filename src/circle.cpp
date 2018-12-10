@@ -9,10 +9,10 @@ int circle::getTimeError(int timeClicked)
 
 int circle::scoreClick(int timeError)
 {
-	if (timeError <= 200) {
+	if (timeError <= 100) {
 		return 100;
 	}
-	else if (timeError <= 300) {
+	else if (timeError <= 200) {
 		return 50;
 	}
 	else {
