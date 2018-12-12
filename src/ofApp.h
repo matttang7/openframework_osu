@@ -48,6 +48,7 @@ public:
 	ofSoundPlayer shelter;
 	ofSoundPlayer jojo;
 	ofSoundPlayer killlakill;
+	ofSoundPlayer fate;
 	ofImage background;
 	int combo;
 	int toBeAssigned;

@@ -12,7 +12,7 @@ int circle::scoreClick(int timeError)
 	if (timeError <= 100) {
 		return 100;
 	}
-	else if (timeError <= 200) {
+	else if (timeError <= 300) {
 		return 50;
 	}
 	else {
@@ -37,6 +37,22 @@ void circle::deleteCircle()
 {
 	location.set(-300, -300);
 	deleted = true;
+}
+
+bool circleSpace::circle::isClickable(std::vector<circle> circles, int position)
+{
+	if (position == 0) {
+		return true;
+	}
+	for (int i = 0; i < position; i++) {
+		if (circles[i].clicked == true || circles[i].deleted == true) {
+
+		}
+		else {
+			return false;
+		}
+	}
+	return true;
 }
 
 inline void circleSpace::to_json(json & j, const circle & c)

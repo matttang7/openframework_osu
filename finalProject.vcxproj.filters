@@ -165,9 +165,4 @@
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="map.json">
-      <Filter>src</Filter>
-    </None>
-  </ItemGroup>
 </Project>

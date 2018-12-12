@@ -1,9 +1,10 @@
 #include "ofApp.h"
 //--------------------------------------------------------------
 void ofApp::setup(){
-	//background.load("shelterBackground.jpg");
+	background.load("shelterBackground.jpg");
 	//background.load("giorno.jpg");
-	background.load("killlakillbackground.jpg");
+	//background.load("killlakillbackground.jpg");
+	//background.load("fateBackground.jpg");
 	text.loadFont("bebas.ttf", 25);
 	textCombo.loadFont("bebas.ttf", 50);
 	timerEnd = false;
@@ -15,14 +16,15 @@ void ofApp::setup(){
 	totalScore = 0;
 	bCircleButton = false;
 	clickedTimedButton = false;
-	/*shelter.load("shelter.mp3");
-	shelter.play();*/
+	shelter.load("shelter.mp3");
+	shelter.play();
 	//jojo.load("jojo.mp3");
 	//jojo.play();
-	killlakill.load("killlakill.mp3");
-	killlakill.play();
-	allSpinners.push_back(spinner(30000, 35000));
-	std::ifstream i("map.json");
+	//killlakill.load("killlakill.mp3");
+	//killlakill.play();
+	/*fate.load("fate.mp3");
+	fate.play();*/
+	std::ifstream i("shelter.json");
 	json j;
 	i >> j;
 	double d = j["circles"][1]["time"];
@@ -32,6 +34,9 @@ void ofApp::setup(){
 	for (int i = 0; i < j["sliders"].size(); i++) {
 		allSliders.push_back(slider(j["sliders"][i]["startTime"], j["sliders"][i]["startX"], j["sliders"][i]["startY"], 
 			j["sliders"][i]["controlX"], j["sliders"][i]["controlY"], j["sliders"][i]["endTime"], j["sliders"][i]["endX"], j["sliders"][i]["endY"]));
+	}
+	for (int i = 0; i < j["spinners"].size(); i++) {
+		allSpinners.push_back(spinner(j["spinners"][i]["start"], j["spinners"][i]["end"]));
 	}
 
 	center = { ofGetWidth() / 2, ofGetHeight() / 2 };
@@ -60,8 +65,10 @@ void ofApp::draw(){
 	background.draw(0,0,ofGetWidth(),ofGetHeight());
 	float barWidth = 600;
 	timer = ofGetElapsedTimeMillis() - startTime;
-	ofSetColor(255, 0, 0);
+	ofSetColor(ofColor::aqua);
 	textCombo.drawString(to_string(combo) + "x", 0,ofGetHeight());
+
+	//Drawing the life bar of the player
 	ofSetLineWidth(600);
 	if (timer >= endTime) {
 		timerEnd = true;
@@ -70,8 +77,10 @@ void ofApp::draw(){
 	ofSetColor(ofColor::aqua);
 	ofDrawRectangle(ofGetWidth() / 2 - 500, ofGetHeight() - 750, barWidth * timerBar, 30);
 
+	// Draws the circles when the time to hit them is within the interval
 	for (int i = 0; i < allCircles.size(); i++) {
-		if (timer >= allCircles[i].milisecondTime - 1000 && timer <= allCircles[i].milisecondTime + 300) {
+		if (timer >= allCircles[i].milisecondTime - 1000 && timer <= allCircles[i].milisecondTime + 100 && !allCircles[i].clicked) {
+			//Assigns numbers 1-9 to the circles
 			if (!allCircles[i].assignedNum) {
 				allCircles[i].displayNum = toBeAssigned;
 				if (toBeAssigned < 9) {
@@ -85,6 +94,7 @@ void ofApp::draw(){
 
 			ofSetColor(ofColor::aqua);
 			ofDrawCircle(allCircles[i].location, allCircles[i].radius);
+			//Draws the approach circles to let player know when to hit the circle
 			if (timer <= allCircles[i].milisecondTime) {
 				ofNoFill();
 				int outerRadius = allCircles[i].radius - ((timer - allCircles[i].milisecondTime) / 20);
@@ -92,15 +102,19 @@ void ofApp::draw(){
 			}
 			ofSetColor(255, 255, 255);
 			text.drawString(to_string(allCircles[i].displayNum), allCircles[i].xCoord - 8, allCircles[i].yCoord + 15);
+			ofNoFill();
+			ofSetColor(150);
+			ofDrawCircle(allCircles[i].xCoord, allCircles[i].yCoord, radius);
 			ofFill();
 		}
-		else if (timer >= allCircles[i].milisecondTime + 500 && !allCircles[i].clicked && !allCircles[i].deleted) {
+		else if (timer >= allCircles[i].milisecondTime + 100 && !allCircles[i].clicked && !allCircles[i].deleted) {
 			combo = 0;
 			allCircles[i].deleteCircle();
 			life -= 800;
 		}
 	}
 
+	//Draws the sliders when it is time to hit the sliders
 	for (int i = 0; i < allSliders.size(); i++) {
 		ofPolyline poly;
 		poly.quadBezierTo(allSliders[i].pointOne, allSliders[i].control, allSliders[i].pointTwo);
@@ -118,14 +132,21 @@ void ofApp::draw(){
 			ofSetColor(ofColor::aqua);
 			ofDrawCircle(allSliders[i].pointOne, radius);
 			ofDrawCircle(allSliders[i].pointTwo, radius);
+			ofNoFill();
+			ofSetColor(150);
+			ofDrawCircle(allSliders[i].pointOne, radius);
+			ofDrawCircle(allSliders[i].pointTwo, radius);
+			ofSetColor(ofColor::aqua);
+			ofFill();
 			poly.draw();
+			//Draws the approach circle for the slider
 			if (timer <= allSliders[i].startTime) {
 				ofNoFill();
 				int outerRadius = radius - ((timer - allSliders[i].startTime) / 20);
 				ofDrawCircle(allSliders[i].pointOne, outerRadius);
 			}
 			if (timer >= allSliders[i].startTime) {
-				ofDrawCircle(poly.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * 21), radius);
+				ofDrawCircle(poly.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * 21), radius + 5);
 			}
 			ofSetColor(255, 255, 255);
 			text.drawString(to_string(allSliders[i].displayNum), allSliders[i].pointOne.x - 8, allSliders[i].pointOne.y + 15);
@@ -133,7 +154,7 @@ void ofApp::draw(){
 		}
 	}
 
-
+	//Draws the spinners when the time to spin is reached
 	for (int i = 0; i < allSpinners.size(); i++) {
 		if (timer >= allSpinners[i].startTime && timer <= allSpinners[i].endTime) {
 			ofPushMatrix();
@@ -141,7 +162,7 @@ void ofApp::draw(){
 			ofRotateRad(-angle);
 
 			ofFill();
-			ofSetColor(220);
+			ofSetColor(ofColor::blueSteel);
 			ofDrawCircle(0, 0, spinnerRadius);
 
 			ofSetLineWidth(3);
@@ -153,24 +174,13 @@ void ofApp::draw(){
 
 			ofPopMatrix();
 			ofFill();
-
-			stringstream s;
-			s << "Angle: " << angle;
-
-			s << "\nmouse - c: " << (currentMouse - center);
-			s << "\np mouse - c: " << (prevMouse - center);
-			s << "\ncurrent mouse: " << currentMouse;
-			s << "\np mouse: " << prevMouse;
-			s << "\nRevolutions: " << angle / glm::two_pi<float>();
-
-			ofDrawBitmapStringHighlight(s.str(), 20, 20);
 		}
 	}
 	ofSetColor(255, 255, 255);
 
-	if (!shelter.isPlaying() && !killlakill.isPlaying()) {
+	//Draws end screen when it reaches the end of the song
+	if (!shelter.isPlaying() && !killlakill.isPlaying() && !fate.isPlaying()) {
 		ofSetColor(ofColor::aqua);
-		std::cout << accuracy << std::endl;
 		if (!accuracyDivided) {
 			accuracy = accuracy / static_cast<double>(allCircles.size());
 			accuracyDivided = true;
@@ -203,10 +213,12 @@ void ofApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
+	//Checks for mouse in the circle of the slider
 	for (int i = 0; i < allSliders.size(); i++) {
 		if (timer >= allSliders[i].startTime && timer < allSliders[i].endTime) {
+			//Moves the slider circle along the path
 			ofPoint p = allSliders[i].path.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * allSliders[i].path.size());
-			if (p.distance(ofPoint(x, y)) < radius) {
+			if (p.distance(ofPoint(x, y)) < radius + 5) {
 				if (life < timer/2 + 10000) {
 					life += 30;
 				}
@@ -228,12 +240,12 @@ void ofApp::mouseDragged(int x, int y, int button){
 		}
 	}
 
+	//Counts spins for each spinner
 	for (int i = 0; i < allSpinners.size(); i++) {
 		if (!allSpinners[i].scored && timer >= allSpinners[i].startTime && timer <= allSpinners[i].endTime) {
 			if (ofDist(x, y, center.x, center.y) <= spinnerRadius+50) {
 				currentMouse = { x,y };
 				if (currentMouse != prevMouse) {
-					//		b = glm::acos(glm::dot(glm::normalize(m - c), glm::normalize(prevMouse - c)));
 					auto d = currentMouse - center;
 					auto pd = prevMouse - center;
 					float diff = ofAngleDifferenceRadians(atan2(d.y, d.x), atan2(pd.y, pd.x));
@@ -245,6 +257,7 @@ void ofApp::mouseDragged(int x, int y, int button){
 				prevMouse = currentMouse;
 			}
 		}
+		//Adds to life for spinner
 		else if (!allSpinners[i].scored && timer >= allSpinners[i].endTime) {
 			if (combo == 0) {
 				totalScore += allSpinners[i].scoreSpin();
@@ -266,12 +279,14 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-	for (int i = 0; i < allCircles.size(); i++) {
-		if (allCircles[i].location.distance(ofPoint(x, y)) < allCircles[i].radius && !allCircles[i].clicked 
-			&& timer >= allCircles[i].milisecondTime - 300 && (i == 0 || allCircles[i-1].deleted)) {
+	//Checks for circle being clicked when time is right
+	for (int i = allCircles.size()-1; i >= 0; i--) {
+		if (allCircles[i].location.distance(ofPoint(x, y)) < allCircles[i].radius && !allCircles[i].clicked
+			&& timer >= allCircles[i].milisecondTime - 300 && allCircles[i].isClickable(allCircles,i)) {
 			std::cout << "clicked" << std::endl;
 			int score = allCircles[i].scoreClick(allCircles[i].getTimeError(timer));
 			std::cout << score << std::endl;
+			//Changes combo/score based on the score
 			if (combo == 0) {
 				totalScore += score;
 			}

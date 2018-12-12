@@ -18,6 +18,7 @@ namespace circleSpace {
 		int scoreClick(int timeError);
 		circle(int time, int x, int y, int radius);
 		void deleteCircle();
+		bool isClickable(std::vector<circle> circles, int position);
 		std::vector<circle> circles;
 	};
 	inline void to_json(json& j, const circle& circle);
