@@ -205,6 +205,7 @@
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\slider.cpp" />
     <ClCompile Include="src\spinner.cpp" />
+    <ClCompile Include="src\tests.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\addons\ofxGui\src\ofxBaseGui.h" />
@@ -223,6 +224,7 @@
     <ClInclude Include="..\..\..\addons\ofxVectorGraphics\src\ofxVectorGraphics.h" />
     <ClInclude Include="..\..\..\addons\ofxXmlSettings\libs\tinyxml.h" />
     <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h" />
+    <ClInclude Include="src\catch.hpp" />
     <ClInclude Include="src\circle.h" />
     <ClInclude Include="src\json.hpp" />
     <ClInclude Include="src\ofApp.h" />

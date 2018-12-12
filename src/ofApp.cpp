@@ -1,9 +1,9 @@
 #include "ofApp.h"
 //--------------------------------------------------------------
 void ofApp::setup(){
-	background.load("shelterBackground.jpg");
+	//background.load("shelterBackground.jpg");
 	//background.load("giorno.jpg");
-	//background.load("killlakillbackground.jpg");
+	background.load("killlakillbackground.jpg");
 	//background.load("fateBackground.jpg");
 	text.loadFont("bebas.ttf", 25);
 	textCombo.loadFont("bebas.ttf", 50);
@@ -16,15 +16,15 @@ void ofApp::setup(){
 	totalScore = 0;
 	bCircleButton = false;
 	clickedTimedButton = false;
-	shelter.load("shelter.mp3");
-	shelter.play();
+	//shelter.load("shelter.mp3");
+	//shelter.play();
 	//jojo.load("jojo.mp3");
 	//jojo.play();
-	//killlakill.load("killlakill.mp3");
-	//killlakill.play();
+	killlakill.load("killlakill.mp3");
+	killlakill.play();
 	/*fate.load("fate.mp3");
 	fate.play();*/
-	std::ifstream i("shelter.json");
+	std::ifstream i("killlakillHard.json");
 	json j;
 	i >> j;
 	double d = j["circles"][1]["time"];
