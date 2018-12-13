@@ -3,28 +3,24 @@
 void ofApp::setup(){
 	//background.load("shelterBackground.jpg");
 	//background.load("giorno.jpg");
-	background.load("killlakillbackground.jpg");
-	//background.load("fateBackground.jpg");
+	//background.load("killlakillbackground.jpg");
+	background.load("fateBackground.jpg");
 	text.loadFont("bebas.ttf", 25);
 	textCombo.loadFont("bebas.ttf", 50);
-	timerEnd = false;
 	startTime = ofGetElapsedTimeMillis();
-	//circleButton.set(100, 100);
 	radius = 50;
 	life = 10000;
 	combo = 0;
 	totalScore = 0;
-	bCircleButton = false;
-	clickedTimedButton = false;
 	//shelter.load("shelter.mp3");
 	//shelter.play();
 	//jojo.load("jojo.mp3");
 	//jojo.play();
-	killlakill.load("killlakill.mp3");
-	killlakill.play();
-	/*fate.load("fate.mp3");
-	fate.play();*/
-	std::ifstream i("killlakillHard.json");
+	//killlakill.load("killlakill.mp3");
+	//killlakill.play();
+	fate.load("fate.mp3");
+	fate.play();
+	std::ifstream i("fate.json");
 	json j;
 	i >> j;
 	double d = j["circles"][1]["time"];
@@ -39,7 +35,7 @@ void ofApp::setup(){
 		allSpinners.push_back(spinner(j["spinners"][i]["start"], j["spinners"][i]["end"]));
 	}
 
-	center = { ofGetWidth() / 2, ofGetHeight() / 2 };
+	center = { ofGetWidth() /half, ofGetHeight() / half };
 	ofSetCircleResolution(100);
 	angle = 0;
 	toBeAssigned = 1;
@@ -49,11 +45,11 @@ void ofApp::setup(){
 
 //--------------------------------------------------------------
 void ofApp::update(){
-	if (life <= timer/2 + 10000) {
+	if (life <= timer/half + lifeTotal) {
 		//ofExit();
 	}
-	if (life > timer/2 + 10000) {
-		life -= 100;
+	if (life > timer/half + lifeTotal) {
+		life -= lifeDrain;
 	}
 	if(ofGetKeyPressed('z') || ofGetKeyPressed('x')) {
 		mouseDragged(ofGetMouseX(), ofGetMouseY(), 0);
@@ -70,16 +66,13 @@ void ofApp::draw(){
 
 	//Drawing the life bar of the player
 	ofSetLineWidth(600);
-	if (timer >= endTime) {
-		timerEnd = true;
-	}
-	float timerBar = ofMap(life - timer/2, 0.0, 10000, 0.0, 1.0, true);
+	float timerBar = ofMap(life - timer/half, 0.0, lifeTotal, 0.0, 1.0, true);
 	ofSetColor(ofColor::aqua);
-	ofDrawRectangle(ofGetWidth() / 2 - 500, ofGetHeight() - 750, barWidth * timerBar, 30);
+	ofDrawRectangle(ofGetWidth() / half - positionLifeWidth, ofGetHeight() - positionLifeHeight, barWidth * timerBar, 30);
 
 	// Draws the circles when the time to hit them is within the interval
 	for (int i = 0; i < allCircles.size(); i++) {
-		if (timer >= allCircles[i].milisecondTime - 1000 && timer <= allCircles[i].milisecondTime + 100 && !allCircles[i].clicked) {
+		if (timer >= allCircles[i].milisecondTime - approachTime && timer <= allCircles[i].milisecondTime + marginAfter && !allCircles[i].clicked) {
 			//Assigns numbers 1-9 to the circles
 			if (!allCircles[i].assignedNum) {
 				allCircles[i].displayNum = toBeAssigned;
@@ -97,20 +90,20 @@ void ofApp::draw(){
 			//Draws the approach circles to let player know when to hit the circle
 			if (timer <= allCircles[i].milisecondTime) {
 				ofNoFill();
-				int outerRadius = allCircles[i].radius - ((timer - allCircles[i].milisecondTime) / 20);
+				int outerRadius = allCircles[i].radius - ((timer - allCircles[i].milisecondTime) / approachCircleDivider);
 				ofDrawCircle(allCircles[i].location, outerRadius);
 			}
 			ofSetColor(255, 255, 255);
-			text.drawString(to_string(allCircles[i].displayNum), allCircles[i].xCoord - 8, allCircles[i].yCoord + 15);
+			text.drawString(to_string(allCircles[i].displayNum), allCircles[i].xCoord - positionTextX, allCircles[i].yCoord + positionTextY);
 			ofNoFill();
 			ofSetColor(150);
 			ofDrawCircle(allCircles[i].xCoord, allCircles[i].yCoord, radius);
 			ofFill();
 		}
-		else if (timer >= allCircles[i].milisecondTime + 100 && !allCircles[i].clicked && !allCircles[i].deleted) {
+		else if (timer >= allCircles[i].milisecondTime + marginAfter && !allCircles[i].clicked && !allCircles[i].deleted) {
 			combo = 0;
 			allCircles[i].deleteCircle();
-			life -= 800;
+			life -= circleMissLoss;
 		}
 	}
 
@@ -118,7 +111,7 @@ void ofApp::draw(){
 	for (int i = 0; i < allSliders.size(); i++) {
 		ofPolyline poly;
 		poly.quadBezierTo(allSliders[i].pointOne, allSliders[i].control, allSliders[i].pointTwo);
-		if (timer >= allSliders[i].startTime - 1000 && timer <= allSliders[i].endTime) {
+		if (timer >= allSliders[i].startTime - approachTime && timer <= allSliders[i].endTime) {
 			if (!allSliders[i].assignedNum) {
 				allSliders[i].displayNum = toBeAssigned;
 				if (toBeAssigned < 9) {
@@ -139,17 +132,18 @@ void ofApp::draw(){
 			ofSetColor(ofColor::aqua);
 			ofFill();
 			poly.draw();
+
 			//Draws the approach circle for the slider
 			if (timer <= allSliders[i].startTime) {
 				ofNoFill();
-				int outerRadius = radius - ((timer - allSliders[i].startTime) / 20);
+				int outerRadius = radius - ((timer - allSliders[i].startTime) / approachCircleDivider);
 				ofDrawCircle(allSliders[i].pointOne, outerRadius);
 			}
 			if (timer >= allSliders[i].startTime) {
-				ofDrawCircle(poly.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * 21), radius + 5);
+				ofDrawCircle(poly.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * approachSliderDivider), radius + cursorError);
 			}
 			ofSetColor(255, 255, 255);
-			text.drawString(to_string(allSliders[i].displayNum), allSliders[i].pointOne.x - 8, allSliders[i].pointOne.y + 15);
+			text.drawString(to_string(allSliders[i].displayNum), allSliders[i].pointOne.x - positionTextX, allSliders[i].pointOne.y + positionTextY);
 			ofFill();
 		}
 	}
@@ -185,18 +179,13 @@ void ofApp::draw(){
 			accuracy = accuracy / static_cast<double>(allCircles.size());
 			accuracyDivided = true;
 		}
-		text.drawString("Final Score: " + to_string(totalScore) + "\n Accuracy: " + to_string(accuracy), ofGetWidth() / 2, ofGetHeight() / 2);
+		text.drawString("Final Score: " + to_string(totalScore) + "\n Accuracy: " + to_string(accuracy), ofGetWidth() / half, ofGetHeight() / half);
 		ofSetColor(255, 255, 255);
 	}
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	if (key == ' ') {
-		timerEnd = false;
-		startTime = ofGetElapsedTimeMillis();
-		clickedTimedButton = false;
-	}
 	if (key == 'z' || key == 'x') {
 		mousePressed(ofGetMouseX(), ofGetMouseY(), 0);
 	}
@@ -218,9 +207,9 @@ void ofApp::mouseDragged(int x, int y, int button){
 		if (timer >= allSliders[i].startTime && timer < allSliders[i].endTime) {
 			//Moves the slider circle along the path
 			ofPoint p = allSliders[i].path.getPointAtIndexInterpolated(((timer - allSliders[i].startTime) / allSliders[i].totalTime) * allSliders[i].path.size());
-			if (p.distance(ofPoint(x, y)) < radius + 5) {
-				if (life < timer/2 + 10000) {
-					life += 30;
+			if (p.distance(ofPoint(x, y)) < radius + cursorError) {
+				if (life < timer/half + lifeTotal) {
+					life += sliderLifeGain;
 				}
 				if (allSliders[i].totalPoints > 0) {
 					allSliders[i].totalPoints--;
@@ -269,8 +258,8 @@ void ofApp::mouseDragged(int x, int y, int button){
 			allSpinners[i].scored = true;
 		}
 		if (abs(allSpinners[i].revolutions) >= allSpinners[i].revCounter) {
-			if (life < timer/2 + 10000) {
-				life += 400;
+			if (life < timer/half + lifeTotal) {
+				life += circleHalfLifeGain;
 			}
 			allSpinners[i].revCounter++;
 		}
@@ -296,20 +285,20 @@ void ofApp::mousePressed(int x, int y, int button){
 			if (score == 100) {
 				combo++;
 				accuracy++;
-				if (life < timer/2 + 10000) {
-					life += 600;
+				if (life < timer/half + lifeTotal) {
+					life += circleFullLifeGain;
 				}
 			}
 			else if (score == 50) {
 				combo++;
 				accuracy += 0.5;
-				if (life < timer/2 + 10000) {
-					life += 400;
+				if (life < timer/half + lifeTotal) {
+					life += circleHalfLifeGain;
 				}
 			}
 			else {
 				combo = 0;
-				life -= 800;
+				life -= circleMissLoss;
 			}
 			allCircles[i].clicked = true;
 			allCircles[i].deleteCircle();

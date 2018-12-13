@@ -11,5 +11,5 @@ spinner::spinner(int start, int end)
 
 int spinner::scoreSpin()
 {
-	return 100 * abs(revolutions);
+	return scoreMultiplier * revCounter;
 }
